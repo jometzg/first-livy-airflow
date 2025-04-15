@@ -12,9 +12,10 @@ description="A test livyoperator DAG",
 schedule_interval=None,
 start_date=datetime(2025, 1, 1),
 ) as dag:
-    task = MyCustomOperator(task_id="sample-task",  
+    task = MyCustomOperator(task_id="sample-livy-task",  
                             param1="hello", 
                             param2="team",
-                            file="sample_file.txt")
+                            file="sample_file.txt",
+                            livy_conn_id='fabric_livy')
 
     task
