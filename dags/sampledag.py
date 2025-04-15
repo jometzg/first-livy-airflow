@@ -6,12 +6,15 @@ from custom_operator.my_custom_operator import MyCustomOperator
 
 # test dag
 with DAG(
-"test-custom-package",
+"test-livy-operator",
 tags=["example"],
-description="A simple tutorial DAG",
+description="A test livyoperator DAG",
 schedule_interval=None,
 start_date=datetime(2025, 1, 1),
 ) as dag:
-    task = MyCustomOperator(task_id="sample-task",  param1="hello", param2="team",)
+    task = MyCustomOperator(task_id="sample-task",  
+                            param1="hello", 
+                            param2="team",
+                            file="sample_file.txt")
 
     task
