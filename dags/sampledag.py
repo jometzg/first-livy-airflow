@@ -16,6 +16,8 @@ start_date=datetime(2025, 1, 1),
                             param1="hello", 
                             param2="team",
                             file="sample_file.txt",
-                            livy_conn_id='fabric_livy')
+                            livy_conn_id='fabric_livy',
+                            fabric_conn_id='fabric_livy',
+            )
 
     task
