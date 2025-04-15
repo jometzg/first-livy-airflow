@@ -2,6 +2,7 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from airflow.providers.apache.livy.operators.livy import LivyOperator
 
+
 class MyCustomOperator(LivyOperator):
     @apply_defaults
     def __init__(self, param1, param2, *args, **kwargs):
