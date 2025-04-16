@@ -4,3 +4,4 @@ requests
 pytest
 setuptools
 apache-airflow-providers-apache-livy
+apache_airflow_microsoft_fabric_plugin
