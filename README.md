@@ -1,10 +1,13 @@
 # Airflow Custom Operator
 
-This project provides a custom Apache Airflow operator, `MyCustomOperator`, designed to extend the functionality of Airflow workflows. 
+This project provides a custom Apache Airflow operator, `CustomLivyOperator`, designed to extend the functionality of Airflow workflows. 
 
 ## Overview
 
-The `MyCustomOperator` allows users to define custom tasks within their Airflow DAGs, enabling more complex workflows tailored to specific needs.
+The `CustomLivyOperator` attempts to fix the integration issues observed when using the LivyOperator in Microsoft Fabric. The issues would require workarounds that utilised LivyHooks to put update code in the DAG - which is untidy.
+
+This version specialises the normal LivyOperator to embed these changes so that the DAG can be much more clean.
+
 
 ## Installation
 
@@ -18,31 +21,36 @@ pip install -r requirements.txt
 
 ## Usage
 
-To use the `MyCustomOperator` in your Airflow DAG, you can import it as follows:
+To use the `CustomLivyOperator` in your Airflow DAG, you can import it as follows:
 
 ```python
-from datetime import datetime
 from airflow import DAG
+from datetime import datetime
+from custom_operator.my_custom_operator import CustomLivyOperator
 
- # Import from private package
-from custom_operator.my_custom_operator import MyCustomOperator
-
-# test dag
 with DAG(
-"test-custom-package",
-tags=["example"],
-description="A simple tutorial DAG",
-schedule_interval=None,
-start_date=datetime(2025, 1, 1),
+    dag_id="Livy_Custom_Op",
+    schedule_interval="@daily",
+    start_date=datetime(2025, 4, 7, hour=14, minute=28),
+    catchup=False,
 ) as dag:
-    task = MyCustomOperator(task_id="sample-task",  param1="hello", param2="world",)
 
-    task
+
+    livy_job = CustomLivyOperator(
+     task_id="livy_job",
+     fabric_conn_id = "fabric",
+     livy_conn_id='fabric_livy', # Livy Connection with api endpoint (not including /batches or /sessions) as host
+     file='abfss://JJTest2@onelake.dfs.fabric.microsoft.com/lhJohn.Lakehouse/Files/code/spark-query-lh.py', # File in lakehouse to run
+     polling_interval=60,
+     dag=dag
+    )
+    
+    livy_job
 ```
 
 ## Testing
 
-Unit tests for the `MyCustomOperator` are located in the `tests` directory. You can run the tests using:
+Unit tests for the `CustomLivyOperator` are located in the `tests` directory. You can run the tests using:
 
 ```bash
 pytest tests/
